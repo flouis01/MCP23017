@@ -1,6 +1,6 @@
 # MCP23017
 
-MCP23017 is a Library that allows to easily comunicate with a MCP23017 I/O-Expander Chip using I²C.
+MCP23017 is an Arduino Library that allows to easily comunicate with a MCP23017 I/O-Expander Chip using I²C.
 
 ## Dependencies
 
