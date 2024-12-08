@@ -94,10 +94,7 @@ void loop() {
     IOEX.readAllMem();
   }break;
   }
-
-
 }
-
 
 int getFromSerial(String options, int min, int max){
   Serial.println(options);
