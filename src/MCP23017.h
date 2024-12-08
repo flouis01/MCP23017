@@ -1,6 +1,7 @@
 #ifndef MCP23017_H
 #define MCP23017_H
 #include <Arduino.h>
+#include "MCP23017_config.h"
 
 
 // MCP23017 Regestry List
@@ -45,22 +46,31 @@
 #define GPB6 14
 #define GPB7 15
 
-
-typedef struct MCP23017_config {
-  //Configured by the 3 Adress pins A0, A1 & A2
-  //A0=GND & A1=GND & A2=GND -> Adress=0x20
-  char ADRESS;
-  //Defines default pin mode
-  //0=INPUT; 1=OUTPUT; 2=INPUT_PULLUP
-  uint8_t GPA_MODE[8];
-  uint8_t GPB_MODE[8];
-} MCP23017_config;
-
 class MCP23017 {
+public:
+
+  // Begins comunication with the MCP23017, resets the MCP23017 and make basic Settings (Pinmode)
+  void begin(MCP23017_config config);
+
+  // Changes the pinmode of a specified pin
+  void pinMode(uint8_t pin, uint8_t mode);
+
+  // Sets the digital output of a specified pin
+  void digitalWrite(uint8_t pin, uint8_t val);
+
+  // Returns the digital high low state of a specified pin
+  int digitalRead(uint8_t pin);
+
+  // Reads all memory-registers and prints them to the Serial Monitor in a table format
+  void readAllMem();
+
+  // Resets the Chip
+  void reset();
+
 private:
   //Configured by the 3 Adress pins A0, A1 & A2
   //A0=GND & A1=GND & A2=GND -> Adress=0x20
-  char ADRESS;
+  char ADDRESS;
 
   //Defines default pin mode
   //0=INPUT; 1=OUTPUT; 2=INPUT_PULLUP
@@ -105,27 +115,6 @@ private:
   int readByte(byte ByteAdress);
 
   void writeByte(byte ByteAdress, byte data);
-
-
-public:
-
-  // Begins comunication with the MCP23017, resets the MCP23017 and make basic Settings (Pinmode)
-  void begin(MCP23017_config config);
-
-  // Changes the pinmode of a specified pin
-  void pinMode(uint8_t pin, uint8_t mode);
-
-  // Sets the digital output of a specified pin
-  void digitalWrite(uint8_t pin, uint8_t val);
-
-  // Returns the digital high low state of a specified pin
-  int digitalRead(uint8_t pin);
-
-  // Reads all memory-registers and prints them to the Serial Monitor in a table format
-  void readAllMem();
-
-  // Resets the Chip
-  void reset();
 };
 
 #endif

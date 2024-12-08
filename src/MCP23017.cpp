@@ -2,14 +2,15 @@
 #include <Arduino.h>
 #include <Wire.h>
 #include <math.h>
+#include "MCP23017_config.h"
 
 //=============================================
 //    public functions
 //=============================================
 
 void MCP23017::begin(MCP23017_config config) {
-  //Set I²C Adress
-  ADRESS = config.ADRESS;
+  //Set I²C Address
+  ADDRESS = config.ADDRESS;
 
   // Reset MCP23017 
   reset();
@@ -95,76 +96,76 @@ void MCP23017::readAllMem() {
 
 void MCP23017::updatePinMode() {
   byte data = 0;
-  byte ByteAdress = 0;
+  byte ByteAddress = 0;
 
   //GPA IO direction
-  ByteAdress = IODIRA;
+  ByteAddress = IODIRA;
   data = 0;
   for (int i = 0; i < 8; i++) {
     if (GPA_MODE[i] != OUTPUT) {
       data += 1 << i;
     }
   }
-  writeByte(ByteAdress, data);
+  writeByte(ByteAddress, data);
 
   //GPA General-Purpose-Pull-Up
-  ByteAdress = GPPUA;
+  ByteAddress = GPPUA;
   data = 0;
   for (int i = 0; i < 8; i++) {
     if (GPA_MODE[i] == INPUT_PULLUP) {
       data += 1 << i;
     }
   }
-  writeByte(ByteAdress, data);
+  writeByte(ByteAddress, data);
 
   //GPB IO direction
-  ByteAdress = IODIRB;
+  ByteAddress = IODIRB;
   data = 0;
   for (int i = 0; i < 8; i++) {
     if (GPB_MODE[i] != OUTPUT) {
       data += 1 << i;
     }
   }
-  writeByte(ByteAdress, data);
+  writeByte(ByteAddress, data);
 
   //GPB General-Purpose-Pull-Up
-  ByteAdress = GPPUB;
+  ByteAddress = GPPUB;
   data = 0;
   for (int i = 0; i < 8; i++) {
     if (GPB_MODE[i] == INPUT_PULLUP) {
       data += 1 << i;
     }
   }
-  writeByte(ByteAdress, data);
+  writeByte(ByteAddress, data);
 }
 
-void MCP23017::writeBit(byte ByteAdress, uint8_t bitNr, uint8_t val) {
+void MCP23017::writeBit(byte ByteAddress, uint8_t bitNr, uint8_t val) {
   // Input validation 
   val = (val >= 1) ? HIGH : LOW;
   bitNr = (bitNr > 7) ? 7 : bitNr;
 
   byte reg = 0;
   byte currVal = 0;
-  reg = readByte(ByteAdress);
+  reg = readByte(ByteAddress);
   currVal = (reg & (1 << bitNr)) != 0;
   if (currVal != val) {
     //chage value
     reg += (currVal < val) ? (1 << bitNr) : -(1 << bitNr);
-    writeByte(ByteAdress, reg);
+    writeByte(ByteAddress, reg);
   }
 }
 
-int MCP23017::readByte(byte ByteAdress) {
-  Wire.beginTransmission(ADRESS);
-  Wire.write(ByteAdress);
+int MCP23017::readByte(byte ByteAddress) {
+  Wire.beginTransmission(ADDRESS);
+  Wire.write(ByteAddress);
   Wire.endTransmission();
-  Wire.requestFrom(ADRESS, 1);
+  Wire.requestFrom(ADDRESS, 1);
   return Wire.read();
 }
 
-void MCP23017::writeByte(byte ByteAdress, byte data) {
-  Wire.beginTransmission(ADRESS);
-  Wire.write(ByteAdress);
+void MCP23017::writeByte(byte ByteAddress, byte data) {
+  Wire.beginTransmission(ADDRESS);
+  Wire.write(ByteAddress);
   Wire.write(data);
   Wire.endTransmission();
 }
